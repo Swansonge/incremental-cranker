@@ -5,14 +5,15 @@ import "CoreLibs/graphics"
 import "CoreLibs/ui"
 
 import "globals"
-import "scripts/crankDisplay"
+import "scripts/crankCountDisplay"
+--import "scripts/crankPositionDisplay"
 
 -- Localizing commonly used globals
 local pd <const> = playdate
 local gfx <const> = playdate.graphics
 
 -- need to initialize crank count display
-createCrankDisplay()
+createCrankCountDisplay()
 
 -- playdate.update function is required in every project
 function playdate.update()

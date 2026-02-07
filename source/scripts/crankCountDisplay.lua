@@ -7,10 +7,10 @@ local gfx <const> = pd.graphics
 
 local crankCountSprite
 
-function createCrankDisplay()
+function createCrankCountDisplay()
     crankCountSprite = gfx.sprite.new()
 
-    updateDisplay()
+    updateCrankCountDisplay()
     crankCountSprite:setCenter(0, 0)
     crankCountSprite:moveTo(200, 120)
 
@@ -21,7 +21,7 @@ function createCrankDisplay()
     crankCountSprite:add()
 end
 
-function updateDisplay()
+function updateCrankCountDisplay()
     local crankText = "crank count: " .. CRANK_COUNT
     local textWidth, textHeight = gfx.getTextSize(crankText)
     local crankCountImage = gfx.image.new(textWidth, textHeight)
@@ -33,5 +33,5 @@ end
 
 function incrementCrankCount()
     CRANK_COUNT = CRANK_COUNT + CRANK_MULT
-    updateDisplay()
+    updateCrankCountDisplay()
 end
