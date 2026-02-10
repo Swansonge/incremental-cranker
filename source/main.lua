@@ -1,19 +1,31 @@
 -- Main script for incremental cranker game
 
 -- IMPORTS
+import "CoreLibs/object"
 import "CoreLibs/graphics"
+import "CoreLibs/sprites"
+import "CoreLibs/timer"
+import "CoreLibs/math"
+import "CoreLibs/animator"
 import "CoreLibs/ui"
 
 import "globals"
 import "scripts/crankCountDisplay"
---import "scripts/crankPositionDisplay"
+import "scripts/crankPositionIcon"
 
 -- Localizing commonly used globals
 local pd <const> = playdate
 local gfx <const> = playdate.graphics
 
--- need to initialize crank count display
-createCrankCountDisplay()
+-- initialize crank count display. Calculate position using dimensions of CrankPositionIcon
+crankCountSprite = CrankCountDisplay(10, -10)
+
+-- use width, height, and offsets from crank counter to create offsets for crank position icon
+local crankPositionRadius = 25
+local counterWidth, counterHeight = crankCountSprite:getSize()
+local positionIconOffsetX = (counterWidth / 5) + (crankPositionRadius / 2)
+local positionIconOffsetY = counterHeight + (crankPositionRadius / 2)
+CrankPositionIcon(crankPositionRadius, positionIconOffsetX, positionIconOffsetY)
 
 -- playdate.update function is required in every project
 function playdate.update()
@@ -27,7 +39,7 @@ function playdate.update()
 
         -- every forward crank, increment counter
         if crankTicks == 1 then
-            incrementCrankCount()
+            crankCountSprite:incrementCrankCount()
         end
     end
 end

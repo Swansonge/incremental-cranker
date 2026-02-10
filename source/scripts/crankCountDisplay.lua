@@ -5,33 +5,61 @@ import "CoreLibs/crank"
 local pd <const> = playdate
 local gfx <const> = pd.graphics
 
-local crankCountSprite
+class('CrankCountDisplay').extends(gfx.sprite)
 
-function createCrankCountDisplay()
-    crankCountSprite = gfx.sprite.new()
+-- Init function for crankCountDisplay
+-- Inputs:
+--  xOffset (int) - x offset from the top right edge of the screen
+--  yOffset (int) - y offset from the top right edge of the screen
+function CrankCountDisplay:init(xOffset, yOffset)
+    self.xOffset = xOffset
+    self.yOffset = yOffset
 
-    updateCrankCountDisplay()
-    crankCountSprite:setCenter(0, 0)
-    crankCountSprite:moveTo(200, 120)
+    self:updateCrankCountDisplay()
+
+    --keep track of text width and height so they can be uodated as text is added
+    self.lastWidth = self.textWidth
+    self.lastHeight = self.textHeight
+
+    self:setCenter(0, 0)
+    self:moveTo(400 - self.xOffset - self.textWidth, self.yOffset + self.textHeight)
 
     -- make it so crank display doesn't shake with screen and objects travel over it 
-    crankCountSprite:setIgnoresDrawOffset(true)
-    crankCountSprite:setZIndex(100)
+    self:setIgnoresDrawOffset(true)
+    self:setZIndex(100)
     
-    crankCountSprite:add()
+    self:add()
 end
 
-function updateCrankCountDisplay()
+
+-- NEED TO DOCUMENT
+function CrankCountDisplay:updateCrankCountDisplay()
     local crankText = "crank count: " .. CRANK_COUNT
-    local textWidth, textHeight = gfx.getTextSize(crankText)
-    local crankCountImage = gfx.image.new(textWidth, textHeight)
+    self.textWidth, self.textHeight = gfx.getTextSize(crankText)
+
+    local crankCountImage = gfx.image.new(self.textWidth, self.textHeight)
     gfx.pushContext(crankCountImage)
         gfx.drawText(crankText, 0, 0)
     gfx.popContext()
-    crankCountSprite:setImage(crankCountImage)
+    self:setImage(crankCountImage)
 end
 
-function incrementCrankCount()
+function CrankCountDisplay:update()
+
+    -- if width or height changed, update the position of the text
+    if self.lastWidth ~= self.textWidth then
+        self:moveTo(400 - self.xOffset - self.textWidth, self.yOffset + self.textHeight)
+        self.lastWidth = self.textWidth
+    elseif self.lastHeight ~= self.textHeight then
+        self:moveTo(400 - self.xOffset - self.textWidth, self.yOffset + self.textHeight)
+        self.lastHeight = self.textHeight
+    end 
+
+end
+
+
+-- NEED TO DOCUMENT
+function CrankCountDisplay:incrementCrankCount()
     CRANK_COUNT = CRANK_COUNT + CRANK_MULT
-    updateCrankCountDisplay()
+    self:updateCrankCountDisplay()
 end
